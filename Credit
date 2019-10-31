@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<cs50.h>
+#include<math.h>
+
+int main(void)
+{
+    long int n = get_long("Number : ");
+    //all visa start with 4
+    //all amex with 34 or 37
+    //mastercard 51 52 53 54 55
+    int sum = 0;
+    
+    for (int i=1;i<=8;i++)
+    {
+	    int x = ( ( n % (long int)( pow ( 10 , (2*i) ) )/( ( long int ) ( pow( 10 , (2*i-1))))))*2;
+        
+	    sum = sum + (x % 10) + (x / 10);
+	}
+    
+    for (int i=1;i<=8;i++)
+    {
+	    int x = ( ( n % (long int)( pow ( 10 , (2*i-1) ) )/( ( long int ) ( pow( 10 , (2*i-2))))));
+        
+        sum = sum + x;
+    }
+    
+    if (sum % 10 == 0)
+    {
+        if ((n/(long)(pow(10,13)))==34 || (n/(long)(pow(10,13)))==37)
+            printf("AMEX\n");
+        else if ((n/(long)(pow(10,14)))==51 || (n/(long)(pow(10,14)))==52 || (n/(long)(pow(10,14)))==53 || (n/(long)(pow(10,14)))==54 || (n/(long)(pow(10,14)))==55)
+            printf("MASTERCARD\n");
+        else if ((n/(long)(pow(10,12)))==4 || (n/(long)(pow(10,15)))==4)
+            printf("VISA\n");
+        else
+            printf("INVALID\n");
+    }
+    else
+        printf("INVALID\n");
+}
