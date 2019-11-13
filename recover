@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[])
+{
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: ./recover image\n");
+        return 1;
+    }
+
+    FILE *in = fopen(argv[1], "r");
+    FILE *out = NULL;
+
+    if (in == NULL)
+    {
+        fprintf(stderr, "File could not be opened\n");
+        return 2;
+    }
+
+    char buffer[512];
+    char s[8];
+    int c = 0;
+
+    while (1)
+    {
+        fread(buffer, 1, sizeof(buffer), in);
+        if ((buffer[0] == (char)255) && (buffer[1] == (char)216) && (buffer[2] == (char)255) && ((buffer[3] & (char)240) == (char)224))
+        {
+            break;
+        }
+    }
+
+    do
+    {
+        sprintf(s, "%03i.jpg", c);
+        out = fopen(s, "w");
+        do
+        {
+            fwrite(buffer, 1, sizeof(buffer), out);
+            fread(buffer, 1, sizeof(buffer), in);
+            if (((buffer[0] == (char)255) && (buffer[1] == (char)216) && (buffer[2] == (char)255) && ((buffer[3] & (char)240) == (char)224))
+                || (feof(in)))
+            {
+                break;
+            }
+        }
+        while (true);
+        c++;
+    }
+    while (ctr < 50);
+    fclose(in);
+    fclose(out);
+    return 0;
+}
